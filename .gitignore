@@ -46,7 +46,7 @@ rsconnect/
 .Rhistory
 inst/doc
 vignettes/*.R
-workspace
+# workspace
 anRpackage
 
 # History files
