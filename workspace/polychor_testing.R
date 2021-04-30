@@ -57,6 +57,7 @@ lowers = outer(1:m, 1:m, get_lower)
 uppers = outer(1:m, 1:m, get_upper)
 tictoc::toc()
 
+names = ("A1", "A2")
 par(mar = c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(lengths)
 plot(lowers)
