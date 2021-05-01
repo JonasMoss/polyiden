@@ -1,12 +1,18 @@
 #' Calculate the partial identification set for the latent correlation
 #'
+#' Find the partial identification set for the latent caorrelation of a `pi`
+#'    matrix when the marginals are known. If the marginals are unknown, the
+#'    identification set is `(-1, 1)`.
+#'
 #' @param pi Matrix of probabilities.
 #' @param marginals Specifies the marginal distribution. Either a named alternative
 #'    or a list containing the distribution functions, quantile functions, and
 #'    standard deviations for each marginal. Defaults to `"normal"`, which
 #'    uses standard normal marginals.
 #' @param symmetric `TRUE` if the copula is symmetric, false otherwise. Not yet
-#'    implemented.
+#'    implemented. Only `FALSE` is implemented.
+#' @return The identification bounds.
+#' @export
 #' @examples
 #'
 #'    # Make pi matrix from data.
@@ -34,8 +40,7 @@
 #'    )
 #'
 #'    polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
-#' @export
-
+#'
 polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "laplace"), symmetric = FALSE) {
 
   if (is.character(marginals)) {
@@ -130,3 +135,29 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
   c(sum(lower_covariances), sum(upper_covariances)) / (sd1 * sd2)
 
 }
+
+
+#' Calculate partial identification bounds for the polyserial correlation
+#'
+#' https://www.rdocumentation.org/packages/polycor/versions/0.7-10/topics/polyserial
+#'
+#' @param pi Distribution function. Its first argument should be continous and its
+#'    second argument categorical.
+#' @param marginals Specifies the marginal distribution. Either a named alternative
+#'    or a list containing the distribution functions, quantile functions, and
+#'    standard deviations for each marginal. Defaults to `"normal"`, which
+#'    uses standard normal marginals.
+#' @return The identification bounds.
+polyserialiden = function(pi, marginals) stop("not implemented")
+
+#' Parametric latent correlations
+#'
+#' @param pi Matrix of probabilities.
+#' @param copula Copula
+#' @param marginals Specifies the marginal distribution. Either a named alternative
+#'    or a list containing the distribution functions, quantile functions, and
+#'    standard deviations for each marginal. Defaults to `"normal"`, which
+#'    uses standard normal marginals.
+#' @param distribution Joint distribution. Ignored if `copula` is specified.
+#' @return The latent correlation.
+latent_correlation = function(pi, copula, marginals, distribution) stop("not implemented")

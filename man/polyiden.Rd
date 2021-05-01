@@ -19,10 +19,15 @@ standard deviations for each marginal. Defaults to `"normal"`, which
 uses standard normal marginals.}
 
 \item{symmetric}{`TRUE` if the copula is symmetric, false otherwise. Not yet
-implemented.}
+implemented. Only `FALSE` is implemented.}
+}
+\value{
+The identification bounds.
 }
 \description{
-Calculate the partial identification set for the latent correlation
+Find the partial identification set for the latent caorrelation of a `pi`
+   matrix when the marginals are known. If the marginals are unknown, the
+   identification set is `(-1, 1)`.
 }
 \examples{
 
@@ -51,4 +56,5 @@ Calculate the partial identification set for the latent correlation
    )
 
    polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
+
 }
