@@ -1,5 +1,4 @@
-#include "shared.hpp"
-
+#include "shared.h"
 
 // [[Rcpp::export]]
 double lower_limit_cpp_point_wise(const double &u, const double &v,
@@ -41,39 +40,6 @@ double lower_limit_cpp_point_wise(const double &u, const double &v,
 }
 
 // [[Rcpp::export]]
-arma::vec lower_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
-
-  arma::vec return_vector(u.n_elem);
-  int I = cum_pi.n_rows;
-  int J = cum_pi.n_cols;
-
-  for(unsigned int index = 0; index < u.n_elem; index++) {
-    double maximum = lower_limit_cpp_point_wise(u(index), v(index), cum_pi, I, J);
-    return_vector(index) =  std::max(0.0, std::max(u(index) + v(index) - 1.0, maximum));
-  }
-
-  return return_vector;
-
-}
-
-// // [[Rcpp::export]]
-// arma::vec lower_limit_cpp(const arma::mat uv, const arma::mat &pi) {
-//
-//   arma::mat cum_pi = cum_pi_matrix_cpp(pi);
-//   arma::vec return_vector(uv.n_cols);
-//   int I = pi.n_rows;
-//   int J = pi.n_cols;
-//
-//   for(unsigned int index = 0; index < uv.n_cols; index++) {
-//     double maximum = lower_limit_cpp_point_wise(uv(0, index), uv(1, index), cum_pi, I, J);
-//     return_vector(index) =  std::max(0.0, std::max(uv(0, index) + uv(1, index) - 1.0, maximum));
-//   }
-//
-//   return return_vector;
-//
-// }
-
-// [[Rcpp::export]]
 double upper_limit_cpp_point_wise(const double &u, const double &v,
                                   const arma::mat &cum_pi, const int &I, const int &J) {
 
@@ -109,6 +75,22 @@ double upper_limit_cpp_point_wise(const double &u, const double &v,
   }
 
   return current;
+
+}
+
+// [[Rcpp::export]]
+arma::vec lower_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
+
+  arma::vec return_vector(u.n_elem);
+  int I = cum_pi.n_rows;
+  int J = cum_pi.n_cols;
+
+  for(unsigned int index = 0; index < u.n_elem; index++) {
+    double maximum = lower_limit_cpp_point_wise(u(index), v(index), cum_pi, I, J);
+    return_vector(index) =  std::max(0.0, std::max(u(index) + v(index) - 1.0, maximum));
+  }
+
+  return return_vector;
 
 }
 
