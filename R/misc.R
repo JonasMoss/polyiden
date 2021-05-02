@@ -4,6 +4,33 @@
 #' @return The cumulative distribution matrix.
 cum_pi_matrix = function(pi) apply(apply(pi, 1, cumsum), 1, cumsum)
 
+#' Transform cumulative pi matrix to pi matrix.
+#'
+#' @param cumpi Cumulative pi matrix.
+#' @return pi matrix.
+
+cum_pi_to_pi = function(cumpi) {
+
+  pi_ = cumpi * 0
+  I = nrow(cumpi)
+  J = ncol(cumpi)
+  pi_[1, ] = c(cumpi[1, 1], diff(cumpi[1 , ]))
+  pi_[ , 1] = c(cumpi[1, 1], diff(cumpi[ , 1]))
+
+  for (i in seq(I - 1) + 1) {
+    for (j in seq(J - 1) + 1) {
+      pi_[i, j] = cumpi[i, j] -
+        cumpi[i, j - 1] -
+        cumpi[i - 1, j] +
+        cumpi[i - 1, j - 1]
+    }
+  }
+
+  pi_
+
+}
+
+
 #' The limit copulas satisfying the constraints of pi
 #'
 #' @param pi Matrix of probabilities.

@@ -3,6 +3,12 @@ data = data[!is.na(data$A4), ]
 data = data[!is.na(data$A5), ]
 pi = table(data$A4, data$A5) / sum(table(data$A4, data$A5))
 
+cum_pi = cum_pi_matrix(pi)
+
+
+}
+
+
 # pi = runif(4)
 # pi = pi / sum(pi)
 # pi = matrix(pi, nrow = 2)
