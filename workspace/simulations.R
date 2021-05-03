@@ -1,7 +1,9 @@
 rho = 0.7
 copula = function(u) copula::pCopula(u, copula::normalCopula(rho, dim = 2))
-pi = generate_pi(i = 10, j = 4, copula = copula)
+pi = generate_pi(i = 4, j = 5, copula = copula)
 polycor::polychor(pi)
+polyiden::polyiden(pi, method = "direct", symmetric = TRUE)
+polyiden::polyiden(pi, method = "substitution")
 
 microbenchmark::microbenchmark(polyiden::polyiden(pi, method = "direct"),
                                polyiden::polyiden(pi, method = "substitution"))

@@ -9,12 +9,28 @@ upper_limit_cpp_point_wise <- function(u, v, cum_pi, I, J) {
     .Call(`_polyiden_upper_limit_cpp_point_wise`, u, v, cum_pi, I, J)
 }
 
+lower_limit_symmetry_cpp_point_wise <- function(u, v, cum_pi, I, J) {
+    .Call(`_polyiden_lower_limit_symmetry_cpp_point_wise`, u, v, cum_pi, I, J)
+}
+
+upper_limit_symmetry_cpp_point_wise <- function(u, v, cum_pi, I, J) {
+    .Call(`_polyiden_upper_limit_symmetry_cpp_point_wise`, u, v, cum_pi, I, J)
+}
+
 lower_limit_cpp <- function(u, v, cum_pi) {
     .Call(`_polyiden_lower_limit_cpp`, u, v, cum_pi)
 }
 
 upper_limit_cpp <- function(u, v, cum_pi) {
     .Call(`_polyiden_upper_limit_cpp`, u, v, cum_pi)
+}
+
+lower_limit_symmetry_cpp <- function(u, v, cum_pi) {
+    .Call(`_polyiden_lower_limit_symmetry_cpp`, u, v, cum_pi)
+}
+
+upper_limit_symmetry_cpp <- function(u, v, cum_pi) {
+    .Call(`_polyiden_upper_limit_symmetry_cpp`, u, v, cum_pi)
 }
 
 #' Make cumulative pi matrix.

@@ -122,6 +122,14 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
   I = nrow(pi)
   J = ncol(pi)
 
+  if(symmetric) {
+    upper_limit = upper_limit_symmetry_cpp
+    lower_limit = lower_limit_symmetry_cpp
+  } else {
+    upper_limit = upper_limit_cpp
+    lower_limit = lower_limit_cpp
+  }
+
   if(method == "direct") {
     tau_i = quant1(c(0, cum_pi[, J]))
     tau_j = quant2(c(0, cum_pi[I, ]))
@@ -129,13 +137,13 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
     upper_integrand = function(x) {
       u = dist1(x[1, ])
       v = dist2(x[2, ])
-      matrix(upper_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+      matrix(upper_limit(u, v, cum_pi) - u * v, nrow = 1)
     }
 
     lower_integrand = function(x) {
       u = dist1(x[1, ])
       v = dist2(x[2, ])
-      matrix(lower_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+      matrix(lower_limit(u, v, cum_pi) - u * v, nrow = 1)
     }
 
   }
@@ -147,13 +155,13 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
     upper_integrand = function(x) {
       u = x[1, ]
       v = x[2, ]
-      matrix((upper_limit_cpp(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+      matrix((upper_limit(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
     }
 
     lower_integrand = function(x) {
       u = x[1, ]
       v = x[2, ]
-      matrix((lower_limit_cpp(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+      matrix((lower_limit(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
     }
 
   }
