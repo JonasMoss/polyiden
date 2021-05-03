@@ -9,6 +9,8 @@
 #'    or a list containing the distribution functions, quantile functions, and
 #'    standard deviations for each marginal. Defaults to `"normal"`, which
 #'    uses standard normal marginals.
+#' @param method The method used for integration. One of `direct"` or `"substitution`. Defaults
+#'    to `"substitution`.
 #' @param symmetric `TRUE` if the copula is symmetric, false otherwise. Not yet
 #'    implemented. Only `FALSE` is implemented.
 #' @return The identification bounds.
@@ -41,7 +43,10 @@
 #'
 #'    polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
 #'
-polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "laplace"), symmetric = FALSE) {
+polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "laplace"),
+                    method = c("substitution", "direct"), symmetric = FALSE) {
+
+  method = match.arg(method)
 
   if (is.character(marginals)) {
 
@@ -53,6 +58,8 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
       quant2 = stats::qnorm
       dist1 = stats::pnorm
       dist2 = stats::pnorm
+      dens1 = stats::dnorm
+      dens2 = stats::dnorm
       sd1 = 1
       sd2 = 1
 
@@ -62,6 +69,8 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
       quant2 = stats::qunif
       dist1 = stats::punif
       dist2 = stats::punif
+      dens1 = stats::dunif
+      dens2 = stats::dunif
       sd1 = sqrt(1/12)
       sd2 = sqrt(1/12)
 
@@ -71,6 +80,8 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
       quant2 = stats::qexp
       dist1 = stats::pexp
       dist2 = stats::pexp
+      dens1 = stats::dexp
+      dens2 = stats::dexp
       sd1 = 1
       sd2 = 1
 
@@ -80,6 +91,8 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
       quant2 = extraDistr::qlaplace
       dist1 = extraDistr::plaplace
       dist2 = extraDistr::plaplace
+      dens1 = extraDistr::dlaplace
+      dens2 = extraDistr::dlaplace
       sd1 = sqrt(2)
       sd2 = sqrt(2)
 
@@ -89,8 +102,17 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
 
     quant1 = marginals$quant1
     quant2 = marginals$quant2
-    dist1 = marginals$dist1
-    dist2 = marginals$dist2
+
+    if(method == "direct") {
+      dist1 = marginals$dist1
+      dist2 = marginals$dist2
+    }
+
+    if(method == "substitution") {
+      dens1 = stats::plaplace
+      dens2 = stats::plaplace
+    }
+
     sd1 = marginals$sd1
     sd2 = marginals$sd1
 
@@ -99,19 +121,41 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
   cum_pi = cum_pi_matrix(pi)
   I = nrow(pi)
   J = ncol(pi)
-  tau_i = quant1(c(0, cum_pi[, J]))
-  tau_j = quant2(c(0, cum_pi[I, ]))
 
-  upper_integrand = function(x) {
-    u = dist1(x[1, ])
-    v = dist2(x[2, ])
-    matrix(upper_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+  if(method == "direct") {
+    tau_i = quant1(c(0, cum_pi[, J]))
+    tau_j = quant2(c(0, cum_pi[I, ]))
+
+    upper_integrand = function(x) {
+      u = dist1(x[1, ])
+      v = dist2(x[2, ])
+      matrix(upper_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+    }
+
+    lower_integrand = function(x) {
+      u = dist1(x[1, ])
+      v = dist2(x[2, ])
+      matrix(lower_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+    }
+
   }
 
-  lower_integrand = function(x) {
-    u = dist1(x[1, ])
-    v = dist2(x[2, ])
-    matrix(lower_limit_cpp(u, v, cum_pi) - u * v, nrow = 1)
+  if(method == "substitution") {
+    tau_i = c(0, cum_pi[, J])
+    tau_j = c(0, cum_pi[I, ])
+
+    upper_integrand = function(x) {
+      u = x[1, ]
+      v = x[2, ]
+      matrix((upper_limit_cpp(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+    }
+
+    lower_integrand = function(x) {
+      u = x[1, ]
+      v = x[2, ]
+      matrix((lower_limit_cpp(u, v, cum_pi) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+    }
+
   }
 
   upper_covariances = outer(

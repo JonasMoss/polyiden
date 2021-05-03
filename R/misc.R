@@ -30,6 +30,26 @@ cum_pi_to_pi = function(cumpi) {
 
 }
 
+#' Reverse a pi matrix
+#'
+#' The reverse pi matrix has the property that its maximal (minimal) correlation
+#'    equals the negative of the minimal (maximal) correlation of the original pi
+#'    matrix.
+#' @param pi A pi matrix
+#' @return The reversed matrix
+
+reverse_pi = function(pi) {
+
+  pi_ = pi
+
+  for (j in seq(ncol(pi_))) {
+    pi_[ , j] = rev(pi[ , j])
+  }
+
+  pi_
+
+}
+
 
 #' The limit copulas satisfying the constraints of pi
 #'
