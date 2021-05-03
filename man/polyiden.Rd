@@ -7,6 +7,7 @@
 polyiden(
   pi,
   marginals = c("normal", "uniform", "exponential", "laplace"),
+  method = c("substitution", "direct"),
   symmetric = FALSE
 )
 }
@@ -17,6 +18,9 @@ polyiden(
 or a list containing the distribution functions, quantile functions, and
 standard deviations for each marginal. Defaults to `"normal"`, which
 uses standard normal marginals.}
+
+\item{method}{The method used for integration. One of `direct"` or `"substitution`. Defaults
+to `"substitution`.}
 
 \item{symmetric}{`TRUE` if the copula is symmetric, false otherwise. Not yet
 implemented. Only `FALSE` is implemented.}
@@ -49,8 +53,8 @@ Find the partial identification set for the latent caorrelation of a `pi`
    tnu_marginals = list(
      quant1 = function(p) qt(p, nu),
      quant2 = function(p) qt(p, nu),
-     dist1 = function(q) pt(q, nu),
-     dist2 = function(q) pt(q, nu),
+     dens1 = function(q) dt(q, nu),
+     dens2 = function(q) dt(q, nu),
      sd1 = sqrt(nu/(nu - 2)),
      sd2 = sqrt(nu/(nu - 2))
    )

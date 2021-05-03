@@ -4,22 +4,24 @@
 \alias{latent_correlation}
 \title{Parametric latent correlations}
 \usage{
-latent_correlation(pi, copula, marginals, distribution)
+latent_correlation(
+  pi,
+  distribution = c("normal"),
+  discrepancy = function(x, y) -y * log(x)
+)
 }
 \arguments{
 \item{pi}{Matrix of probabilities.}
 
-\item{copula}{Copula}
+\item{distribution}{The joint distribution of the latent variables,
+parameterized by the correlation `"rho"`.}
 
-\item{marginals}{Specifies the marginal distribution. Either a named alternative
-or a list containing the distribution functions, quantile functions, and
-standard deviations for each marginal. Defaults to `"normal"`, which
-uses standard normal marginals.}
-
-\item{distribution}{Joint distribution. Ignored if `copula` is specified.}
+\item{discrepancy}{Discrepancy function to minimize. Defaults to
+`-y * log(x))`, which corresponds to minimization of the Kullback-Leibler
+divergence.}
 }
 \value{
-The latent correlation.
+The closest latent correlation as judged by the discrepancy function.
 }
 \description{
 Parametric latent correlations

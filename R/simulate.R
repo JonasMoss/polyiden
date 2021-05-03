@@ -8,8 +8,9 @@
 #' @examples
 #'   norm_cop = copula::normalCopula(0.3, dim = 2)
 #'   copula = function(u) copula::pCopula(u, norm_cop)
-#'   pi = generate_pi(i = 10, j = 4, copula = copula)
+#'   pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
 #'   polycor::polychor(pi) # [1] 0.2999905
+#' @export
 
 
 generate_pi = function(i, j, cutoffs = c("uniform"), copula) {
@@ -24,4 +25,5 @@ generate_pi = function(i, j, cutoffs = c("uniform"), copula) {
 
   cumpi = outer(tau_u, tau_v, Vectorize(function(u, v) copula(c(u, v))))
   cum_pi_to_pi(cumpi)
+
 }

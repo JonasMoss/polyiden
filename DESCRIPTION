@@ -19,7 +19,9 @@ Imports:
     extraDistr,
     cubature,
     psychTools,
-    polycor
+    polycor,
+    mvtnorm,
+    copula
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -23,6 +23,6 @@ Generate pi matrices.
 \examples{
   norm_cop = copula::normalCopula(0.3, dim = 2)
   copula = function(u) copula::pCopula(u, norm_cop)
-  pi = generate_pi(i = 10, j = 4, copula = copula)
+  pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
   polycor::polychor(pi) # [1] 0.2999905
 }

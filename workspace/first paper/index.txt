@@ -1,0 +1,31 @@
+An index and a brief explanation of the files:
+
+utility.R: Includes functions to compute the bounds from Proposition 1 with normal marginals, bounds from Proposition 2 (Spearman's rho), as well as Spearman's rho of Z when Z is known to have a normal copula.
+
+1.R: Gives basic illustrations of the functions in utility.R by reproduces the empirical examples from the paper.
+
+2.R: Simulates from the extremal distributions (and contains code to plot simulated data from the distributions). Verifies the numerical procedures in the "lcorr"-package via Monte Carlo integration.
+
+3.R: Verifies the numerical procedures in the "lcorr"-package via a brute force numerical integration method.
+
+4.R: Contains code for the biserial example. Can be extended to other datasets.
+
+5.R: Contains code for numerical exploration of the bounds as given in the two figures in the appendix.
+
+6.R: Contains code for approximate the minimum length of the bounds.
+
+6.Rdata: The R worksheet after runing the lengthy calculation in 6.R up to the point "save.image("6.Rdata") in the source code.
+
+7.R: Code to generate the plot in Section 4.1
+
+8.R: Used for Section 2.4
+
+9.R: Used for the congeneric model in section 2.3
+
+10.R: This file plots the regions of continuity for the piece-wise contiouns  function C_U(u,v). See the appendix, A.4
+
+bound_lengths.Rds: R data for the bound lengths in section 2.3. See 1.R.
+
+maximals.Rds: The maximal bounds in section 2.4. See 8.R.
+
+maximals.Rds: The minimal bounds in section 2.4. See 8.R.

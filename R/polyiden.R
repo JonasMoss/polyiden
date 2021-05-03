@@ -35,8 +35,8 @@
 #'    tnu_marginals = list(
 #'      quant1 = function(p) qt(p, nu),
 #'      quant2 = function(p) qt(p, nu),
-#'      dist1 = function(q) pt(q, nu),
-#'      dist2 = function(q) pt(q, nu),
+#'      dens1 = function(q) dt(q, nu),
+#'      dens2 = function(q) dt(q, nu),
 #'      sd1 = sqrt(nu/(nu - 2)),
 #'      sd2 = sqrt(nu/(nu - 2))
 #'    )
@@ -109,8 +109,8 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
     }
 
     if(method == "substitution") {
-      dens1 = stats::plaplace
-      dens2 = stats::plaplace
+      dens1 = marginals$dens1
+      dens2 = marginals$dens2
     }
 
     sd1 = marginals$sd1
@@ -197,11 +197,39 @@ polyserialiden = function(pi, marginals) stop("not implemented")
 #' Parametric latent correlations
 #'
 #' @param pi Matrix of probabilities.
-#' @param copula Copula
-#' @param marginals Specifies the marginal distribution. Either a named alternative
-#'    or a list containing the distribution functions, quantile functions, and
-#'    standard deviations for each marginal. Defaults to `"normal"`, which
-#'    uses standard normal marginals.
-#' @param distribution Joint distribution. Ignored if `copula` is specified.
-#' @return The latent correlation.
-latent_correlation = function(pi, copula, marginals, distribution) stop("not implemented")
+#' @param distribution The joint distribution of the latent variables,
+#'    parameterized by the correlation `"rho"`.
+#' @param discrepancy Discrepancy function to minimize. Defaults to
+#'    `-y * log(x))`, which corresponds to minimization of the Kullback-Leibler
+#'    divergence.
+#' @return The closest latent correlation as judged by the discrepancy function.
+latent_correlation = function(pi, distribution = c("normal"), discrepancy = function(x, y) -y * log(x)) {
+
+  cum_pi = cum_pi_matrix(pi)
+  I = nrow(pi)
+  J = ncol(pi)
+
+  tau_u = cum_pi[, J]
+  tau_v = cum_pi[I, ]
+
+  if(distribution == "normal") {
+    distribution = function(x, r) {
+      copula::pCopula(x, copula::normalCopula(r, dim = 2))
+    }
+  }
+
+  objective = function(r) {
+
+    probs = outer(
+      X = tau_u,
+      Y = tau_v,
+      FUN = Vectorize(function(u, v) distribution(c(u, v), r))
+      )
+
+    sum(discrepancy(cum_pi_to_pi(probs), pi))
+
+  }
+
+  stats::optimize(objective, interval = c(-1, 1))$minimum
+
+}
