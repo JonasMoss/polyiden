@@ -36,36 +36,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// lower_limit_symmetry_cpp_point_wise
-double lower_limit_symmetry_cpp_point_wise(const double& u, const double& v, const arma::mat& cum_pi, const int& I, const int& J);
-RcppExport SEXP _polyiden_lower_limit_symmetry_cpp_point_wise(SEXP uSEXP, SEXP vSEXP, SEXP cum_piSEXP, SEXP ISEXP, SEXP JSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type cum_pi(cum_piSEXP);
-    Rcpp::traits::input_parameter< const int& >::type I(ISEXP);
-    Rcpp::traits::input_parameter< const int& >::type J(JSEXP);
-    rcpp_result_gen = Rcpp::wrap(lower_limit_symmetry_cpp_point_wise(u, v, cum_pi, I, J));
-    return rcpp_result_gen;
-END_RCPP
-}
-// upper_limit_symmetry_cpp_point_wise
-double upper_limit_symmetry_cpp_point_wise(const double& u, const double& v, const arma::mat& cum_pi, const int& I, const int& J);
-RcppExport SEXP _polyiden_upper_limit_symmetry_cpp_point_wise(SEXP uSEXP, SEXP vSEXP, SEXP cum_piSEXP, SEXP ISEXP, SEXP JSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type cum_pi(cum_piSEXP);
-    Rcpp::traits::input_parameter< const int& >::type I(ISEXP);
-    Rcpp::traits::input_parameter< const int& >::type J(JSEXP);
-    rcpp_result_gen = Rcpp::wrap(upper_limit_symmetry_cpp_point_wise(u, v, cum_pi, I, J));
-    return rcpp_result_gen;
-END_RCPP
-}
 // lower_limit_cpp
 arma::vec lower_limit_cpp(const arma::vec& u, const arma::vec& v, const arma::mat& cum_pi);
 RcppExport SEXP _polyiden_lower_limit_cpp(SEXP uSEXP, SEXP vSEXP, SEXP cum_piSEXP) {
@@ -92,32 +62,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// lower_limit_symmetry_cpp
-arma::vec lower_limit_symmetry_cpp(const arma::vec& u, const arma::vec& v, const arma::mat& cum_pi);
-RcppExport SEXP _polyiden_lower_limit_symmetry_cpp(SEXP uSEXP, SEXP vSEXP, SEXP cum_piSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type cum_pi(cum_piSEXP);
-    rcpp_result_gen = Rcpp::wrap(lower_limit_symmetry_cpp(u, v, cum_pi));
-    return rcpp_result_gen;
-END_RCPP
-}
-// upper_limit_symmetry_cpp
-arma::vec upper_limit_symmetry_cpp(const arma::vec& u, const arma::vec& v, const arma::mat& cum_pi);
-RcppExport SEXP _polyiden_upper_limit_symmetry_cpp(SEXP uSEXP, SEXP vSEXP, SEXP cum_piSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type cum_pi(cum_piSEXP);
-    rcpp_result_gen = Rcpp::wrap(upper_limit_symmetry_cpp(u, v, cum_pi));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cum_pi_matrix_cpp
 arma::mat cum_pi_matrix_cpp(const arma::mat& pi);
 RcppExport SEXP _polyiden_cum_pi_matrix_cpp(SEXP piSEXP) {
@@ -133,12 +77,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_polyiden_lower_limit_cpp_point_wise", (DL_FUNC) &_polyiden_lower_limit_cpp_point_wise, 5},
     {"_polyiden_upper_limit_cpp_point_wise", (DL_FUNC) &_polyiden_upper_limit_cpp_point_wise, 5},
-    {"_polyiden_lower_limit_symmetry_cpp_point_wise", (DL_FUNC) &_polyiden_lower_limit_symmetry_cpp_point_wise, 5},
-    {"_polyiden_upper_limit_symmetry_cpp_point_wise", (DL_FUNC) &_polyiden_upper_limit_symmetry_cpp_point_wise, 5},
     {"_polyiden_lower_limit_cpp", (DL_FUNC) &_polyiden_lower_limit_cpp, 3},
     {"_polyiden_upper_limit_cpp", (DL_FUNC) &_polyiden_upper_limit_cpp, 3},
-    {"_polyiden_lower_limit_symmetry_cpp", (DL_FUNC) &_polyiden_lower_limit_symmetry_cpp, 3},
-    {"_polyiden_upper_limit_symmetry_cpp", (DL_FUNC) &_polyiden_upper_limit_symmetry_cpp, 3},
     {"_polyiden_cum_pi_matrix_cpp", (DL_FUNC) &_polyiden_cum_pi_matrix_cpp, 1},
     {NULL, NULL, 0}
 };

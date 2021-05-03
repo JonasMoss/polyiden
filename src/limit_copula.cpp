@@ -79,43 +79,6 @@ double upper_limit_cpp_point_wise(const double &u, const double &v,
 }
 
 // [[Rcpp::export]]
-double lower_limit_symmetry_cpp_point_wise(const double &u, const double &v,
-                                           const arma::mat &cum_pi, const int &I, const int &J) {
-
-  double current = -1/0.0;
-
-  for (int i = 0; i <= I - 2; i++) {
-    for (int j = 0; j <= J - 2; j++) {
-      double candidate1 = cum_pi(i, j) - std::max(cum_pi(i, J - 1) - u, 0.0) - std::max(cum_pi(I - 1, j) - v, 0.0);
-      double candidate2 = cum_pi(i, j) - std::max(cum_pi(i, J - 1) - v, 0.0) - std::max(cum_pi(I - 1, j) - u, 0.0);
-      double candidate = std::max(candidate1, candidate2);
-      current = std::max(candidate, current);
-    }
-  }
-
-  return current;
-
-}
-// [[Rcpp::export]]
-double upper_limit_symmetry_cpp_point_wise(const double &u, const double &v,
-                                  const arma::mat &cum_pi, const int &I, const int &J) {
-
-  double current = 1/0.0;
-
-  for (int i = 0; i <= I - 2; i++) {
-    for (int j = 0; j <= J - 2; j++) {
-      double candidate1 = cum_pi(i, j) + std::max(u - cum_pi(i, J - 1), 0.0) + std::max(v - cum_pi(I - 1, j), 0.0);
-      double candidate2 = cum_pi(i, j) + std::max(v - cum_pi(i, J - 1), 0.0) + std::max(u - cum_pi(I - 1, j), 0.0);
-      double candidate = std::min(candidate1, candidate2);
-      current = std::min(candidate, current);
-    }
-  }
-
-  return current;
-
-}
-
-// [[Rcpp::export]]
 arma::vec lower_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
 
   arma::vec return_vector(u.n_elem);
@@ -140,38 +103,6 @@ arma::vec upper_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::ma
 
   for(unsigned int index = 0; index < u.n_elem; index++) {
     double minimum = upper_limit_cpp_point_wise(u(index), v(index), cum_pi, I, J);
-    return_vector(index) = std::min(u(index), std::min(v(index), minimum));
-  }
-
-  return return_vector;
-
-}
-
-// [[Rcpp::export]]
-arma::vec lower_limit_symmetry_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
-
-  arma::vec return_vector(u.n_elem);
-  int I = cum_pi.n_rows;
-  int J = cum_pi.n_cols;
-
-  for(unsigned int index = 0; index < u.n_elem; index++) {
-    double maximum = lower_limit_symmetry_cpp_point_wise(u(index), v(index), cum_pi, I, J);
-    return_vector(index) =  std::max(0.0, std::max(u(index) + v(index) - 1.0, maximum));
-  }
-
-  return return_vector;
-
-}
-
-// [[Rcpp::export]]
-arma::vec upper_limit_symmetry_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
-
-  arma::vec return_vector(u.n_elem);
-  int I = cum_pi.n_rows;
-  int J = cum_pi.n_cols;
-
-  for(unsigned int index = 0; index < u.n_elem; index++) {
-    double minimum = upper_limit_symmetry_cpp_point_wise(u(index), v(index), cum_pi, I, J);
     return_vector(index) = std::min(u(index), std::min(v(index), minimum));
   }
 
