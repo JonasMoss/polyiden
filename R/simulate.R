@@ -23,7 +23,7 @@ generate_pi = function(i, j, cutoffs = c("uniform"), copula) {
 
   }
 
-  cumpi = outer(tau_u, tau_v, Vectorize(function(u, v) copula(c(u, v))))
-  cum_pi_to_pi(cumpi)
+  cum_pi = outer(tau_u, tau_v, Vectorize(function(u, v) copula(c(u, v))))
+  cum_pi_to_pi(cum_pi)
 
 }

@@ -9,7 +9,7 @@ generate_pi(i, j, cutoffs = c("uniform"), copula)
 \arguments{
 \item{i, j}{The number of rows and number of columns of the pi matrix.}
 
-\item{cutoffs}{Method to generate the uniform cutoffs. Only `"uniform"` right
+\item{cutoffs}{Method to generate the uniform cutoffs. Only \code{"uniform"} right
 now.}
 
 \item{copula}{The copula to generate probabilities from.}

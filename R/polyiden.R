@@ -118,7 +118,7 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
 
   }
 
-  cum_pi = cum_pi_matrix(pi)
+  cum_pi = pi_to_cum_pi(pi)
   I = nrow(pi)
   J = ncol(pi)
 
@@ -204,6 +204,7 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
 #'    uses standard normal marginals.
 #' @param method The method used for integration. One of `direct"` or `"substitution`. Defaults
 #'    to `"substitution`.
+#' @export
 #' @return The identification bounds.
 
 polyserialiden = function(copula, points, marginals = c("normal", "uniform", "exponential", "laplace"),
@@ -374,9 +375,10 @@ polyserialiden = function(copula, points, marginals = c("normal", "uniform", "ex
 #'    `-y * log(x))`, which corresponds to minimization of the Kullback-Leibler
 #'    divergence.
 #' @return The closest latent correlation as judged by the discrepancy function.
+#' @export
 latent_correlation = function(pi, distribution = c("normal"), discrepancy = function(x, y) -y * log(x)) {
 
-  cum_pi = cum_pi_matrix(pi)
+  cum_pi = pi_to_cum_pi(pi)
   I = nrow(pi)
   J = ncol(pi)
 

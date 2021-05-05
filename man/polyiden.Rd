@@ -16,22 +16,22 @@ polyiden(
 
 \item{marginals}{Specifies the marginal distribution. Either a named alternative
 or a list containing the distribution functions, quantile functions, and
-standard deviations for each marginal. Defaults to `"normal"`, which
+standard deviations for each marginal. Defaults to \code{"normal"}, which
 uses standard normal marginals.}
 
-\item{method}{The method used for integration. One of `direct"` or `"substitution`. Defaults
-to `"substitution`.}
+\item{method}{The method used for integration. One of \verb{direct"} or \verb{"substitution}. Defaults
+to \verb{"substitution}.}
 
-\item{symmetric}{`TRUE` if the copula is symmetric, false otherwise. Not yet
-implemented. Only `FALSE` is implemented.}
+\item{symmetric}{\code{TRUE} if the copula is symmetric, false otherwise. Not yet
+implemented. Only \code{FALSE} is implemented.}
 }
 \value{
 The identification bounds.
 }
 \description{
-Find the partial identification set for the latent caorrelation of a `pi`
-   matrix when the marginals are known. If the marginals are unknown, the
-   identification set is `(-1, 1)`.
+Find the partial identification set for the latent caorrelation of a \code{pi}
+matrix when the marginals are known. If the marginals are unknown, the
+identification set is \verb{(-1, 1)}.
 }
 \examples{
 

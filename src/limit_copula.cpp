@@ -1,6 +1,5 @@
 #include "shared.h"
 
-// [[Rcpp::export]]
 double lower_limit_cpp_point_wise(const double &u, const double &v,
                                   const arma::mat &cum_pi, const int &I, const int &J) {
 
@@ -39,7 +38,6 @@ double lower_limit_cpp_point_wise(const double &u, const double &v,
 
 }
 
-// [[Rcpp::export]]
 double upper_limit_cpp_point_wise(const double &u, const double &v,
                                   const arma::mat &cum_pi, const int &I, const int &J) {
 

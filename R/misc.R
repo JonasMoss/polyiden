@@ -1,65 +1,63 @@
-#' Make cumulative pi matrix.
-#'
-#' @param pi The matrix of probabilities
-#' @return The cumulative distribution matrix.
-cum_pi_matrix = function(pi) apply(apply(pi, 1, cumsum), 1, cumsum)
-
-#' Transform cumulative pi matrix to pi matrix.
-#'
-#' @param cumpi Cumulative pi matrix.
-#' @return pi matrix.
-
-cum_pi_to_pi = function(cumpi) {
-
-  pi_ = cumpi * 0
-  I = nrow(cumpi)
-  J = ncol(cumpi)
-  pi_[1, ] = c(cumpi[1, 1], diff(cumpi[1 , ]))
-  pi_[ , 1] = c(cumpi[1, 1], diff(cumpi[ , 1]))
-
-  for (i in seq(I - 1) + 1) {
-    for (j in seq(J - 1) + 1) {
-      pi_[i, j] = cumpi[i, j] -
-        cumpi[i, j - 1] -
-        cumpi[i - 1, j] +
-        cumpi[i - 1, j - 1]
-    }
-  }
-
-  pi_
-
-}
-
-#' Reverse a pi matrix
+#' Transform probability matrices.
 #'
 #' The reverse pi matrix has the property that its maximal (minimal) correlation
 #'    equals the negative of the minimal (maximal) correlation of the original pi
 #'    matrix.
-#' @param pi A pi matrix
-#' @return The reversed matrix
+#'
+#' @param pi,cum_pi The matrix of probabilities or matrix or cumulative probability matrix
+#'    of probabilities.
+#' @return The cumulative probability matrix corresponding to `pi` if `pi_to_cumpi` is
+#'    called; the probability matrix corresponding to `cum_pi` if `cum_pi_to_pi` is called. If
+#'    `reverse_pi` is called, it reverses the `pi` matrix.
+#' @examples
+#'    copula = function(u) copula::pCopula(u, copula::normalCopula(0.3, dim = 2))
+#'    pi = polyiden::generate_pi(i = 3, j = 3, copula = copula)
+#'    pi_to_cum_pi(pi)
+#'    all(cum_pi_to_pi((pi_to_cum_pi(pi))) == pi) # TRUE
+#'
+#'    polyiden::polyiden(pi) # [1] -0.5699454  0.8549995
+#'    -polyiden::polyiden(reverse_pi(pi)) # [1] 0.8549995 -0.5699454
+#' @name transform_matrices
+NULL
 
-reverse_pi = function(pi) {
+#' @rdname transform_matrices
+pi_to_cum_pi = function(pi) apply(apply(pi, 1, cumsum), 1, cumsum)
 
-  pi_ = pi
+#' @rdname transform_matrices
+cum_pi_to_pi = function(cum_pi) {
 
-  for (j in seq(ncol(pi_))) {
-    pi_[ , j] = rev(pi[ , j])
+  pi = cum_pi * 0
+  I = nrow(cum_pi)
+  J = ncol(cum_pi)
+  pi[1, ] = c(cum_pi[1, 1], diff(cum_pi[1 , ]))
+  pi[ , 1] = c(cum_pi[1, 1], diff(cum_pi[ , 1]))
+
+  for (i in seq(I - 1) + 1) {
+
+    for (j in seq(J - 1) + 1) {
+
+      pi[i, j] = cum_pi[i, j] -
+        cum_pi[i, j - 1] -
+        cum_pi[i - 1, j] +
+        cum_pi[i - 1, j - 1]
+
+    }
+
   }
 
-  pi_
+  pi
 
 }
 
+#' @rdname transform_matrices
+reverse_pi = function(pi) {
 
-#' The limit copulas satisfying the constraints of pi
-#'
-#' @param pi Matrix of probabilities.
-#' @return The lower limit copula or upper limit copula.
-#' @name limit_copula
-NULL
+  pi_reverse = pi
 
-#' @rdname limit_copula
-lower_limit = function(pi) function(u, v) c(lower_limit_cpp(u, v, pi))
+  for (j in seq(ncol(pi_reverse))) {
+    pi_reverse[ , j] = rev(pi[ , j])
+  }
 
-#' @rdname limit_copula
-upper_limit = function(pi) function(u, v) c(upper_limit_cpp(u, v, pi))
+  pi_reverse
+
+}
