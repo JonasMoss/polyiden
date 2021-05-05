@@ -10,10 +10,11 @@
 #'    called; the probability matrix corresponding to `cum_pi` if `cum_pi_to_pi` is called. If
 #'    `reverse_pi` is called, it reverses the `pi` matrix.
 #' @examples
+#'    library("polyiden")
 #'    copula = function(u) copula::pCopula(u, copula::normalCopula(0.3, dim = 2))
 #'    pi = polyiden::generate_pi(i = 3, j = 3, copula = copula)
-#'    pi_to_cum_pi(pi)
-#'    all(cum_pi_to_pi((pi_to_cum_pi(pi))) == pi) # TRUE
+#'    polyiden::pi_to_cum_pi(pi)
+#'    all(polyiden::cum_pi_to_pi((pi_to_cum_pi(pi))) == pi) # TRUE
 #'
 #'    polyiden::polyiden(pi) # [1] -0.5699454  0.8549995
 #'    -polyiden::polyiden(reverse_pi(pi)) # [1] 0.8549995 -0.5699454
@@ -21,9 +22,11 @@
 NULL
 
 #' @rdname transform_matrices
+#' @export
 pi_to_cum_pi = function(pi) apply(apply(pi, 1, cumsum), 1, cumsum)
 
 #' @rdname transform_matrices
+#' @export
 cum_pi_to_pi = function(cum_pi) {
 
   pi = cum_pi * 0
@@ -50,6 +53,7 @@ cum_pi_to_pi = function(cum_pi) {
 }
 
 #' @rdname transform_matrices
+#' @export
 reverse_pi = function(pi) {
 
   pi_reverse = pi

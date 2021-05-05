@@ -28,10 +28,11 @@ equals the negative of the minimal (maximal) correlation of the original pi
 matrix.
 }
 \examples{
+   library("polyiden")
    copula = function(u) copula::pCopula(u, copula::normalCopula(0.3, dim = 2))
    pi = polyiden::generate_pi(i = 3, j = 3, copula = copula)
-   pi_to_cum_pi(pi)
-   all(cum_pi_to_pi((pi_to_cum_pi(pi))) == pi) # TRUE
+   polyiden::pi_to_cum_pi(pi)
+   all(polyiden::cum_pi_to_pi((pi_to_cum_pi(pi))) == pi) # TRUE
 
    polyiden::polyiden(pi) # [1] -0.5699454  0.8549995
    -polyiden::polyiden(reverse_pi(pi)) # [1] 0.8549995 -0.5699454

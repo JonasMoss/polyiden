@@ -29,7 +29,7 @@
 #'    polyiden::polyiden(pi, marginals = "uniform") # [1] -0.1668584  0.7203827
 #'    polyiden::polyiden(pi, marginals = "exponential") # [1] -0.2980032  0.8964526
 #'
-#'    # Uisng custom t-distributed marginals with nu = 7 degrees of freedom.
+#'    # Using custom t-distributed marginals with nu = 7 degrees of freedom.
 #'
 #'    nu = 7
 #'    tnu_marginals = list(
