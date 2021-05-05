@@ -24,7 +24,7 @@ round(tau1,2)
 tau2 <- qnorm(b)
 round(tau2, 2)
 rho <- polycor::polychor(p)
-round(rho,2)
+round(rho, 2)
 
 cop <- normalCopula(rho)
 

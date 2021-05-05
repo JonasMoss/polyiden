@@ -196,22 +196,180 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
 
 #' Calculate partial identification bounds for the polyserial correlation
 #'
-#' https://www.rdocumentation.org/packages/polycor/versions/0.7-10/topics/polyserial
-#'
-#' @param pi Distribution function. Its first argument should be continous and its
-#'    second argument categorical.
+#' @param copula The copula.
+#' @param points The points where the second argument is evaluated.
 #' @param marginals Specifies the marginal distribution. Either a named alternative
 #'    or a list containing the distribution functions, quantile functions, and
 #'    standard deviations for each marginal. Defaults to `"normal"`, which
 #'    uses standard normal marginals.
+#' @param method The method used for integration. One of `direct"` or `"substitution`. Defaults
+#'    to `"substitution`.
 #' @return The identification bounds.
-polyserialiden = function(pi, marginals) stop("not implemented")
+
+polyserialiden = function(copula, points, marginals = c("normal", "uniform", "exponential", "laplace"),
+                          method = c("substitution", "direct")) {
+
+  method = match.arg(method)
+
+  if (is.character(marginals)) {
+
+    marginals = match.arg(marginals)
+
+    if (marginals == "normal") {
+
+      quant1 = stats::qnorm
+      quant2 = stats::qnorm
+      dist1 = stats::pnorm
+      dist2 = stats::pnorm
+      dens1 = stats::dnorm
+      dens2 = stats::dnorm
+      sd1 = 1
+      sd2 = 1
+
+    } else if (marginals == "uniform") {
+
+      quant1 = stats::qunif
+      quant2 = stats::qunif
+      dist1 = stats::punif
+      dist2 = stats::punif
+      dens1 = stats::dunif
+      dens2 = stats::dunif
+      sd1 = sqrt(1/12)
+      sd2 = sqrt(1/12)
+
+    } else if (marginals == "exponential") {
+
+      quant1 = stats::qexp
+      quant2 = stats::qexp
+      dist1 = stats::pexp
+      dist2 = stats::pexp
+      dens1 = stats::dexp
+      dens2 = stats::dexp
+      sd1 = 1
+      sd2 = 1
+
+    } else if (marginals == "laplace") {
+
+      quant1 = extraDistr::qlaplace
+      quant2 = extraDistr::qlaplace
+      dist1 = extraDistr::plaplace
+      dist2 = extraDistr::plaplace
+      dens1 = extraDistr::dlaplace
+      dens2 = extraDistr::dlaplace
+      sd1 = sqrt(2)
+      sd2 = sqrt(2)
+
+    }
+
+  } else {
+
+    quant1 = marginals$quant1
+    quant2 = marginals$quant2
+
+    if(method == "direct") {
+      dist1 = marginals$dist1
+      dist2 = marginals$dist2
+    }
+
+    if(method == "substitution") {
+      dens1 = marginals$dens1
+      dens2 = marginals$dens2
+    }
+
+    sd1 = marginals$sd1
+    sd2 = marginals$sd1
+
+  }
+
+  upper_limit = function(u, v) {
+
+    rep_points = rep(points, each = length(u))
+    rep_u = rep(u, length(points))
+    rep_v = rep(v, length(points))
+    rep_cop = copula(cbind(rep_u, rep_points))
+
+    objective = matrix(
+      data = rep_cop + pmax(rep_v - rep_points, 0),
+      nrow = length(points),
+      byrow = TRUE)
+
+    pmin(u, v, Rfast::colMins(objective, value = TRUE))
+
+  }
+
+  lower_limit = function(u, v) {
+
+    rep_points = rep(points, each = length(u))
+    rep_u = rep(u, length(points))
+    rep_v = rep(v, length(points))
+    rep_cop = copula(cbind(rep_u, rep_points))
+
+    objective = matrix(
+      data = rep_cop - pmax(rep_points - rep_v, 0),
+      nrow = length(points),
+      byrow = TRUE)
+
+    pmax(0, u + v - 1, Rfast::colMaxs(objective, value = TRUE))
+
+  }
+
+  if(method == "direct") {
+    tau = quant2(c(0, points, 1))
+    lower = quant1(0)
+    upper = quant1(1)
+
+    upper_integrand = function(x) {
+      u = dist1(x[1, ])
+      v = dist2(x[2, ])
+      matrix(upper_limit(u, v) - u * v, nrow = 1)
+    }
+
+    lower_integrand = function(x) {
+      u = dist1(x[1, ])
+      v = dist2(x[2, ])
+      matrix(lower_limit(u, v) - u * v, nrow = 1)
+    }
+
+  } else if (method == "substitution") {
+    tau = c(0, points, 1)
+    lower = 0
+    upper = 1
+
+    upper_integrand = function(x) {
+      u = x[1, ]
+      v = x[2, ]
+      matrix((upper_limit(u, v) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+    }
+
+    lower_integrand = function(x) {
+      u = x[1, ]
+      v = x[2, ]
+      matrix((lower_limit(u, v) - u * v) / (dens1(quant1(u)) * dens2(quant2(v))), nrow = 1)
+    }
+
+  }
+
+  upper_covariances = sapply(seq(length(tau) - 1), function(i) cubature::hcubature(
+    upper_integrand,
+    lowerLimit = c(lower, tau[i]),
+    upperLimit = c(upper, tau[i + 1]),
+    vectorInterface = TRUE)$integral)
+
+  lower_covariances = sapply(seq(length(tau) - 1), function(i) cubature::hcubature(
+    lower_integrand,
+    lowerLimit = c(lower, tau[i]),
+    upperLimit = c(upper, tau[i + 1]),
+    vectorInterface = TRUE)$integral)
+
+  c(sum(lower_covariances), sum(upper_covariances)) / (sd1 * sd2)
+
+}
 
 #' Parametric latent correlations
 #'
 #' @param pi Matrix of probabilities.
 #' @param distribution The joint distribution of the latent variables,
-#'    parameterized by the correlation `"rho"`.
+#'    parameterized by the correlation `"rho"`. Only `"normal"` supported.
 #' @param discrepancy Discrepancy function to minimize. Defaults to
 #'    `-y * log(x))`, which corresponds to minimization of the Kullback-Leibler
 #'    divergence.

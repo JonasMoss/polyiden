@@ -26,6 +26,7 @@ test_that("polyiden agrees with 2 x 2 normal", {
 
 test_that("latent_correlation works for normal", {
 
+  set.seed(1)
   rho = runif(1)
   copula = function(u) copula::pCopula(u, copula::normalCopula(rho, dim = 2))
   pi = generate_pi(i = sample(2:20, 1), j = sample(2:20, 1), copula = copula)

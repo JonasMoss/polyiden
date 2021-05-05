@@ -4,20 +4,29 @@
 \alias{polyserialiden}
 \title{Calculate partial identification bounds for the polyserial correlation}
 \usage{
-polyserialiden(pi, marginals)
+polyserialiden(
+  copula,
+  points,
+  marginals = c("normal", "uniform", "exponential", "laplace"),
+  method = c("substitution", "direct")
+)
 }
 \arguments{
-\item{pi}{Distribution function. Its first argument should be continous and its
-second argument categorical.}
+\item{copula}{The copula.}
+
+\item{points}{The points where the second argument is evaluated.}
 
 \item{marginals}{Specifies the marginal distribution. Either a named alternative
 or a list containing the distribution functions, quantile functions, and
 standard deviations for each marginal. Defaults to `"normal"`, which
 uses standard normal marginals.}
+
+\item{method}{The method used for integration. One of `direct"` or `"substitution`. Defaults
+to `"substitution`.}
 }
 \value{
 The identification bounds.
 }
 \description{
-https://www.rdocumentation.org/packages/polycor/versions/0.7-10/topics/polyserial
+Calculate partial identification bounds for the polyserial correlation
 }

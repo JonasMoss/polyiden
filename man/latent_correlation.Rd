@@ -14,7 +14,7 @@ latent_correlation(
 \item{pi}{Matrix of probabilities.}
 
 \item{distribution}{The joint distribution of the latent variables,
-parameterized by the correlation `"rho"`.}
+parameterized by the correlation `"rho"`. Only `"normal"` supported.}
 
 \item{discrepancy}{Discrepancy function to minimize. Defaults to
 `-y * log(x))`, which corresponds to minimization of the Kullback-Leibler
