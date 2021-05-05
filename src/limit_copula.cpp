@@ -79,6 +79,21 @@ double upper_limit_cpp_point_wise(const double &u, const double &v,
 }
 
 // [[Rcpp::export]]
+double upper_limit_polyserial_cpp_point_wise(const double &u, const double &v, const arma::vec copula, const arma::vec &points) {
+
+  double current = 1/0.0;
+
+  for (unsigned int i = 0; i < copula.n_elem; i++) {
+      double candidate = copula(i) + std::max(v - points(i), 0.0);
+      current = std::min(candidate, current);
+    }
+
+  return current;
+
+}
+
+
+// [[Rcpp::export]]
 arma::vec lower_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &cum_pi) {
 
   arma::vec return_vector(u.n_elem);
@@ -109,4 +124,35 @@ arma::vec upper_limit_cpp(const arma::vec &u, const arma::vec &v, const arma::ma
   return return_vector;
 
 }
+
+// [[Rcpp::export]]
+arma::vec upper_limit_polyserial_cpp(const arma::vec &u, const arma::vec &v, const arma::mat &copula, const arma::vec &points) {
+
+  arma::vec return_vector(u.n_elem);
+
+  for(unsigned int index = 0; index < u.n_elem; index++) {
+    double minimum = upper_limit_polyserial_cpp_point_wise(u(index), v(index), copula.col(index), points);
+    return_vector(index) = std::min(u(index), std::min(v(index), minimum));
+  }
+
+  return return_vector;
+
+}
+
+
+// [[Rcpp::export]]
+double upper_limit_polyserial_cpp_point_wise(const double &u, const double &v, const arma::vec &points, const double &rho) {
+
+  double current = 1/0.0;
+
+  for (unsigned int i = 0; i < copula.n_elem; i++) {
+    double copula_value =
+    double candidate = copula(i) + std::max(v - points(i), 0.0);
+    current = std::min(candidate, current);
+  }
+
+  return current;
+
+}
+
 

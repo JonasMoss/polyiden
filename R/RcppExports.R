@@ -9,12 +9,20 @@ upper_limit_cpp_point_wise <- function(u, v, cum_pi, I, J) {
     .Call(`_polyiden_upper_limit_cpp_point_wise`, u, v, cum_pi, I, J)
 }
 
+upper_limit_polyserial_cpp_point_wise <- function(u, v, copula, points) {
+    .Call(`_polyiden_upper_limit_polyserial_cpp_point_wise`, u, v, copula, points)
+}
+
 lower_limit_cpp <- function(u, v, cum_pi) {
     .Call(`_polyiden_lower_limit_cpp`, u, v, cum_pi)
 }
 
 upper_limit_cpp <- function(u, v, cum_pi) {
     .Call(`_polyiden_upper_limit_cpp`, u, v, cum_pi)
+}
+
+upper_limit_polyserial_cpp <- function(u, v, copula, points) {
+    .Call(`_polyiden_upper_limit_polyserial_cpp`, u, v, copula, points)
 }
 
 #' Make cumulative pi matrix.

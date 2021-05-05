@@ -4,7 +4,7 @@
 pathOfDirectory <- "C:/Users/A1110339/Dropbox/research/Njål Jonas Steffen/ordinal paper/3.01/attachments/numerical illustrations"
 setwd(pathOfDirectory)
 rm(list=ls())
-source("utility.R")
+source("workspace/first paper/utility.R")
 
 #Suppose the distribution of Z is in fact exactly normal,
 #with standard marginals.
@@ -12,7 +12,7 @@ source("utility.R")
 
 #We use the same distribution as earlier as a base-line:
 p00 <- 0.2
-a <- 0.6
+a <- 0.5
 p01 <- a - p00
 b <- 0.3
 p10 <- b - p00
@@ -52,16 +52,17 @@ CovIntNorm <- function(C, ...) {
   intFunct <- function(x) {
     return(C(F1(x[1]), F2(x[2])) - F1(x[1])*F2(x[2]))
   }
-  
-  return(pcubature(f=intFunct, lowerLimit=c(-M, -M), upperLimit=c(M, M), ...))
+
+  return(hcubature(f=intFunct, lowerLimit=c(-M, -M), upperLimit=c(M, M), ...))
 }
 numIntBoundNorm <- c(CovIntNorm(Wp)$integral, CovIntNorm(Mp)$integral)
 numIntBoundNorm
 #-0.4939573  0.6805938
 tetrachoric(p)
-#lower      upper 
+#lower      upper
 #-0.8758248  0.9293887
 
+# WITH A = 0.5: [1] -0.33  0.78
 
 round(numIntBoundNorm, 2)
 #[1] -0.49  0.68
