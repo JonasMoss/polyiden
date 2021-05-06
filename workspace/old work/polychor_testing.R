@@ -1,8 +1,7 @@
-# Indicator for reverse-coded items.
-reverse = c(1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1)
-
-
 bfi_to_pi = function(i, j) {
+
+  reverse = c(1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1)
+
   data = psychTools::bfi
   data = data[!is.na(data[ , i]), ]
   data = data[!is.na(data[ , j]), ]
@@ -10,45 +9,26 @@ bfi_to_pi = function(i, j) {
   x = data[ , i]
   y = data[ , j]
 
-  if(reverse[i] == 1) {
-    x = 7 - x
-  }
-
-  if(reverse[j] == 1) {
-    y = 7 - y
-  }
+  if(reverse[i] == 1) x = 7 - x
+  if(reverse[j] == 1) y = 7 - y
 
   table(x, y) / sum(table(x, y))
+
 }
 
 
-quant1 = qnorm
-quant2 = qnorm
-dist1 = pnorm
-dist2 = pnorm
-sd1 = 1
-sd2 = 1
-
 get_lim = Vectorize(function(i, j) {
+
   if(i == j) return(NA)
-  pi = bfi_to_pi(i, j)
-  lims = polychoric_pi_set(pi, dist1, dist2, quant1, quant2, sd1, sd2)
-  lims[2] - lims[1]
+  polyiden(bfi_to_pi(i, j))
+
 })
 
-get_upper= Vectorize(function(i, j) {
-  if(i == j) return(NA)
-  pi = bfi_to_pi(i, j)
-  lims = polychoric_pi_set(pi, dist1, dist2, quant1, quant2, sd1, sd2)
-  lims[2]
-})
-
-get_lower = Vectorize(function(i, j) {
-  if(i == j) return(NA)
-  pi = bfi_to_pi(i, j)
-  lims = polychoric_pi_set(pi, dist1, dist2, quant1, quant2, sd1, sd2)
-  lims[1]
-})
+m = 25
+limits = outer(
+  X = seq(m),
+  Y = seq(m),
+  FUN = get_lim)
 
 m = 25
 tictoc::tic()
@@ -62,21 +42,6 @@ par(mar = c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(lengths)
 plot(lowers)
 plot(uppers)
-
-install.packages("")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 cum_pi = cum_pi_matrix(pi)
