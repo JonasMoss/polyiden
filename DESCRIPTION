@@ -2,8 +2,9 @@ Package: polyiden
 Type: Package
 Title: Calculate Partial Identification Regions for Latent Correlations
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Jonas Moss <jonas.moss.statistics@gmail.com>
+Authors@R: c(
+    person("Jonas", "Moss", , "jonas.gjertsen@gmail.com", role = c("aut", "cre"), 
+      comment = c(ORCID = "0000-0002-6876-6964")))
 Description: Latent correlations such as the polychoric and polyserial correlations
     assume that the latent variable is bivariate normal. This package contains
     functions that calculate partial identification regions for latent correlations
@@ -29,3 +30,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
+URL: https://github.com/JonasMoss/polyiden
+BugReports: https://github.com/JonasMoss/polyiden/issues
