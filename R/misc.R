@@ -65,3 +65,52 @@ reverse_pi = function(pi) {
   pi_reverse
 
 }
+
+#' Generate pi matrices.
+#'
+#' @param i,j The number of rows and number of columns of the pi matrix.
+#' @param cutoffs Method to generate the uniform cutoffs. Supports `"uniform"`
+#'    and `"beta"`. If `"beta"`, pass the `shape1i`, `shape2i` (for the `x`
+#'    axis) and `shape1j`, `shape2j` (for the `y` axis) arguments to
+#'    `...`.
+#' @param copula The copula to generate probabilities from.
+#' @param ... Passed to `qbeta` if applicable.
+#' @return The pi matrix.
+#' @examples
+#'    # Make a normal copula with correlation 0.3.
+#'    norm_cop = copula::normalCopula(0.3, dim = 2)
+#'    copula = function(u) copula::pCopula(u, norm_cop)
+#'
+#'    # Generate pi matrix for this copula.
+#'    pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
+#'    polycor::polychor(pi) # [1] 0.2999905
+#'
+#'    # Using the "beta" argument we can non-uniform cutoffs.
+#'    pi = polyiden::generate_pi(i = 10, j = 9, cutoffs = "beta",
+#'                            copula = copula, shape1i = 2, shape2i = 7,
+#'                            shape1j = 1, shape2j = 1/2)
+#'
+#'    polycor::polychor(pi) # [1] 0.2999905
+#' @export
+
+
+generate_pi = function(i, j, cutoffs = c("uniform", "beta"), copula, ...) {
+
+  cutoffs = match.arg(cutoffs)
+
+  tau_u = seq(i) / i
+  tau_v = seq(j) / j
+
+  if (cutoffs == "beta") {
+
+    dots = list(...)
+    tau_u = stats::qbeta(tau_u, dots$shape1i, dots$shape2i)
+    tau_v = stats::qbeta(tau_v, dots$shape1j, dots$shape2j)
+
+  }
+
+  cum_pi = copula(cbind(rep(tau_u, each = length(tau_v)), rep(tau_v, length(tau_u))))
+  cum_pi_to_pi(matrix(cum_pi, nrow = i, byrow = TRUE))
+
+}
+

@@ -4,15 +4,19 @@
 \alias{generate_pi}
 \title{Generate pi matrices.}
 \usage{
-generate_pi(i, j, cutoffs = c("uniform"), copula)
+generate_pi(i, j, cutoffs = c("uniform", "beta"), copula, ...)
 }
 \arguments{
 \item{i, j}{The number of rows and number of columns of the pi matrix.}
 
-\item{cutoffs}{Method to generate the uniform cutoffs. Only \code{"uniform"} right
-now.}
+\item{cutoffs}{Method to generate the uniform cutoffs. Supports \code{"uniform"}
+and \code{"beta"}. If \code{"beta"}, pass the \code{shape1i}, \code{shape2i} (for the \code{x}
+axis) and \code{shape1j}, \code{shape2j} (for the \code{y} axis) arguments to
+\code{...}.}
 
 \item{copula}{The copula to generate probabilities from.}
+
+\item{...}{Passed to \code{qbeta} if applicable.}
 }
 \value{
 The pi matrix.
@@ -21,8 +25,18 @@ The pi matrix.
 Generate pi matrices.
 }
 \examples{
-  norm_cop = copula::normalCopula(0.3, dim = 2)
-  copula = function(u) copula::pCopula(u, norm_cop)
-  pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
-  polycor::polychor(pi) # [1] 0.2999905
+   # Make a normal copula with correlation 0.3.
+   norm_cop = copula::normalCopula(0.3, dim = 2)
+   copula = function(u) copula::pCopula(u, norm_cop)
+
+   # Generate pi matrix for this copula.
+   pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
+   polycor::polychor(pi) # [1] 0.2999905
+
+   # Using the "beta" argument we can non-uniform cutoffs.
+   pi = polyiden::generate_pi(i = 10, j = 9, cutoffs = "beta",
+                           copula = copula, shape1i = 2, shape2i = 7,
+                           shape1j = 1, shape2j = 1/2)
+
+   polycor::polychor(pi) # [1] 0.2999905
 }
