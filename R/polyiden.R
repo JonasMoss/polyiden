@@ -7,13 +7,12 @@
 #' @param pi Matrix of probabilities.
 #' @param marginals Specifies the marginal distribution. Either a named alternative
 #'    or a list containing the distribution functions, quantile functions, and
-#'    standard deviations for each marginal. Defaults to `"normal"`, which
+#'    standard deviations for each marginal. (See the example.) Defaults to `"normal"`, which
 #'    uses standard normal marginals.
-#' @param method The method used for integration. One of `direct"` or `"substitution`. Defaults
-#'    to `"substitution`.
-#' @param symmetric `TRUE` if the copula is symmetric, false otherwise. Not yet
-#'    implemented. Only `FALSE` is implemented.
-#' @return The identification bounds.
+#' @param method The method used for integration. One of `"direct"` or `"substitution"`. Defaults
+#'    to `"substitution"`.
+#' @param symmetric `TRUE` if the copula is symmetric.
+#' @return The endpoints of the identification set.
 #' @export
 #' @examples
 #'
@@ -29,6 +28,9 @@
 #'    polyiden::polyiden(pi, marginals = "uniform") # [1] -0.1668584  0.7203827
 #'    polyiden::polyiden(pi, marginals = "exponential") # [1] -0.2980032  0.8964526
 #'
+#'    #Assuming symmetry, the identification sets become slightly smaller.
+#'    polyiden::polyiden(pi, marginals = "normal", symmetric = TRUE) # [1] -0.1327938  0.6988629
+#'
 #'    # Using custom t-distributed marginals with nu = 7 degrees of freedom.
 #'
 #'    nu = 7
@@ -42,7 +44,7 @@
 #'    )
 #'
 #'    polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
-#'
+#' @template references
 polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "laplace"),
                      method = c("substitution", "direct"), symmetric = FALSE) {
 
@@ -206,6 +208,7 @@ polyiden = function(pi, marginals = c("normal", "uniform", "exponential", "lapla
 #'    to `"substitution`.
 #' @export
 #' @return The identification bounds.
+#' @template references
 
 polyserialiden = function(copula, points, marginals = c("normal", "uniform", "exponential", "laplace"),
                           method = c("substitution", "direct")) {
@@ -376,6 +379,8 @@ polyserialiden = function(copula, points, marginals = c("normal", "uniform", "ex
 #'    divergence.
 #' @return The closest latent correlation as judged by the discrepancy function.
 #' @export
+#' @template references
+
 latent_correlation = function(pi, distribution = c("normal"), discrepancy = function(x, y) -y * log(x)) {
 
   cum_pi = pi_to_cum_pi(pi)

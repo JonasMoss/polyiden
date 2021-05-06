@@ -4,3 +4,4 @@
 workspace
 README.Rmd
 ^\.github$
+man-roxygen
