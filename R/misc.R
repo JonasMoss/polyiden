@@ -18,6 +18,7 @@
 #'
 #'    polyiden::polyiden(pi) # [1] -0.5699454  0.8549995
 #'    -polyiden::polyiden(reverse_pi(pi)) # [1] 0.8549995 -0.5699454
+#' @template references
 #' @name transform_matrices
 NULL
 
@@ -91,8 +92,8 @@ reverse_pi = function(pi) {
 #'                            shape1j = 1, shape2j = 1/2)
 #'
 #'    polycor::polychor(pi) # [1] 0.2999905
+#' @template references
 #' @export
-
 
 generate_pi = function(i, j, cutoffs = c("uniform", "beta"), copula, ...) {
 
