@@ -5,9 +5,9 @@
 
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/polyiden)](https://cran.r-project.org/package=polyiden)
 [![R-CMD-check](https://github.com/JonasMoss/polyiden/workflows/R-CMD-check/badge.svg)](https://github.com/JonasMoss/polyiden/actions)
-[![Project Status: WIP – Initial development is in progress, but there
-has not yet been a stable, usable release suitable for the
-public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 An R package for partial identification of polychoric correlations.
 
@@ -47,7 +47,7 @@ marginals.
 
 ``` r
 polyiden::polyiden(pi, marginals = "normal")
-#> [1] -0.2624196  0.7602734
+#> [1] -0.2624176  0.7602652
 ```
 
 It’s also possible to use `"laplace"`, `"uniform"`, and `"exponential"`.
@@ -55,7 +55,7 @@ Or you can define your own marginals if you want to.
 
 ``` r
 polyiden::polyiden(pi, marginals = "laplace")
-#> [1] -0.3542015  0.7878503
+#> [1] -0.3541983  0.7878365
 ```
 
 ## References
