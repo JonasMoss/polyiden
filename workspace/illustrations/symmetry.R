@@ -1,1 +1,0 @@
-# Symmetry vs. non

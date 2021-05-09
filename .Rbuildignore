@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
-workspace
 README.Rmd
 ^\.github$
 man-roxygen
