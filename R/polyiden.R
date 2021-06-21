@@ -69,7 +69,7 @@ polyiden <- function(
   which_correlatons <- match.arg(which_correlations)
 
   if (exact & symmetric) {
-    c(
+    return(c(
       symmetry_correlation(
         pi_to_cum_pi(pi),
         marginals = marginals,
@@ -82,7 +82,7 @@ polyiden <- function(
         method = method,
         direction = "upper",
         max_rep = max_rep)
-    )
+    ))
   }
 
   if (is.character(marginals)) {

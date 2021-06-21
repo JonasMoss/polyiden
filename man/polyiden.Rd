@@ -11,7 +11,8 @@ polyiden(
   method = c("substitution", "direct"),
   symmetric = FALSE,
   exact = FALSE,
-  max_rep = 1e+05
+  max_rep = 1e+05,
+  which_correlations = c("both", "lower", "upper")
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ and \code{exact = FALSE}.}
 
 \item{max_rep}{Maximal repetitions when looking for an interior point; only
 used when \code{symmetric = TRUE} and \code{exact = TRUE}.}
+
+\item{which_correlations}{Which correlations to return? Choose from \code{"lower"},
+\code{"upper"}, and \code{"both"}.}
 }
 \value{
 The endpoints of the identification set.
