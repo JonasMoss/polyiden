@@ -197,14 +197,20 @@ symmetry_correlation <- function(
       s <- pi_s
       s[x_indices] <- x
       s <- s + t(s) - diag(diag(s))
-      -polyiden::polyiden(cum_pi_to_pi(s), marginals, method)[2]
+      -polyiden::polyiden(cum_pi_to_pi(s),
+                         marginals = marginals,
+                         method = method,
+                         which_correlations = "upper")
     }
   } else {
     f <- function(x) {
       s <- pi_s
       s[x_indices] <- x
       s <- s + t(s) - diag(diag(s))
-      polyiden::polyiden(cum_pi_to_pi(s), marginals, method)[1]
+      polyiden::polyiden(cum_pi_to_pi(s),
+                         marginals = marginals,
+                         method = method,
+                         which_correlations = "lower")
     }
   }
 

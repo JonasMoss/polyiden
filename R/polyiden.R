@@ -20,6 +20,8 @@
 #'    and `exact = FALSE`.
 #' @param max_rep Maximal repetitions when looking for an interior point; only
 #'    used when `symmetric = TRUE` and `exact = TRUE`.
+#' @param which_correlations Which correlations to return? Choose from `"lower"`,
+#'    `"upper"`, and `"both"`.
 #' @return The endpoints of the identification set.
 #' @export
 #' @examples
@@ -60,21 +62,24 @@ polyiden <- function(
   method = c("substitution", "direct"),
   symmetric = FALSE,
   exact = FALSE,
-  max_rep = 100000) {
+  max_rep = 100000,
+  which_correlations = c("both", "lower", "upper")) {
 
   method <- match.arg(method)
+  which_correlatons <- match.arg(which_correlations)
 
   if (exact & symmetric) {
     c(
       symmetry_correlation(
         pi_to_cum_pi(pi),
-        marginals, method,
+        marginals = marginals,
+        method = method,
         direction = "lower",
         max_rep = max_rep),
       symmetry_correlation(
-        pi_to_cum_pi(pi),
-        marginals,
-        method,
+        pi = pi_to_cum_pi(pi),
+        marginals = marginals,
+        method = method,
         direction = "upper",
         max_rep = max_rep)
     )
@@ -191,33 +196,44 @@ polyiden <- function(
     }
   }
 
-  upper_covariances <- outer(
-    X = seq(nrow(pi)),
-    Y = seq(ncol(pi)),
-    FUN = Vectorize(function(i, j) {
-      cubature::hcubature(
-        upper_integrand,
-        lowerLimit = c(tau_i[i], tau_j[j]),
-        upperLimit = c(tau_i[i + 1], tau_j[j + 1]),
-        vectorInterface = TRUE
-      )$integral
-    })
-  )
+  if(which_correlatons == "both" | which_correlatons == "upper") {
+    upper_covariances <- outer(
+      X = seq(nrow(pi)),
+      Y = seq(ncol(pi)),
+      FUN = Vectorize(function(i, j) {
+        cubature::hcubature(
+          upper_integrand,
+          lowerLimit = c(tau_i[i], tau_j[j]),
+          upperLimit = c(tau_i[i + 1], tau_j[j + 1]),
+          vectorInterface = TRUE
+        )$integral
+      })
+    )
+  }
 
-  lower_covariances <- outer(
-    X = seq(nrow(pi)),
-    Y = seq(ncol(pi)),
-    FUN = Vectorize(function(i, j) {
-      cubature::hcubature(
-        lower_integrand,
-        lowerLimit = c(tau_i[i], tau_j[j]),
-        upperLimit = c(tau_i[i + 1], tau_j[j + 1]),
-        vectorInterface = TRUE
-      )$integral
-    })
-  )
+  if(which_correlatons == "both" | which_correlatons == "lower") {
+    lower_covariances <- outer(
+      X = seq(nrow(pi)),
+      Y = seq(ncol(pi)),
+      FUN = Vectorize(function(i, j) {
+        cubature::hcubature(
+          lower_integrand,
+          lowerLimit = c(tau_i[i], tau_j[j]),
+          upperLimit = c(tau_i[i + 1], tau_j[j + 1]),
+          vectorInterface = TRUE
+        )$integral
+      })
+    )
+  }
 
-  c(sum(lower_covariances), sum(upper_covariances)) / (sd1 * sd2)
+  if(which_correlatons == "both") {
+    c(sum(lower_covariances), sum(upper_covariances)) / (sd1 * sd2)
+  } else if(which_correlatons == "upper") {
+    sum(upper_covariances) / (sd1 * sd2)
+  } else if(which_correlatons == "lower") {
+    sum(lower_covariances) / (sd1 * sd2)
+  }
+
 }
 
 #' Calculate partial identification bounds for the polyserial correlation
