@@ -1,7 +1,7 @@
 # Copied from the paper
 # "PARTIAL  IDENTIFICATION  OF  LATENT  CORRELATIONS  WITHBINARY  DATA"
 
-#Details:
+# Details:
 #
 # The function `lcorr` calculates exact bounds for the latent correlation
 #    based on the 2 x 2 table `p` when both marginals are the same.
@@ -22,7 +22,7 @@
 # polycor::polychor(smallpox) # 0.59
 
 lcorr <- function(p, dist = pnorm, quant = qnorm) {
-  var = 1 # Don't change; does not work.
+  var <- 1 # Don't change; does not work.
   p <- p / sum(p)
   dist_name <- substitute(dist)
   if (dist_name == quote(pnorm)) {
@@ -32,15 +32,17 @@ lcorr <- function(p, dist = pnorm, quant = qnorm) {
     lspearman(p)
   } else {
     c(
-      lower = -lcorr_(p[, c(2, 1)], Fx = dist, Fy = dist, Qx = quant,
-                      Qy = quant, var = var),
+      lower = -lcorr_(p[, c(2, 1)],
+        Fx = dist, Fy = dist, Qx = quant,
+        Qy = quant, var = var
+      ),
       upper = lcorr_(p, Fx = dist, Fy = dist, Qx = quant, Qy = quant, var = var)
     )
   }
 }
 
 
-#Function "lspearman". Computes the bounds from Proposition 2.
+# Function "lspearman". Computes the bounds from Proposition 2.
 lspearman <- function(p) {
   p <- p / sum(p)
   c(
@@ -49,8 +51,8 @@ lspearman <- function(p) {
   )
 }
 
-#Function "tetrachoric": Computes the bounds from Proposition 1,
-#assuming standard normal marginals.
+# Function "tetrachoric": Computes the bounds from Proposition 1,
+# assuming standard normal marginals.
 tetrachoric <- function(p) {
   c(
     lower = -lcorr_(p[, c(2, 1)]),

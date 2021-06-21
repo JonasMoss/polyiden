@@ -9,21 +9,33 @@ polyiden(
   pi,
   marginals = c("normal", "uniform", "exponential", "laplace"),
   method = c("substitution", "direct"),
-  symmetric = FALSE
+  symmetric = FALSE,
+  exact = FALSE,
+  max_rep = 1e+05
 )
 }
 \arguments{
 \item{pi}{Matrix of probabilities.}
 
-\item{marginals}{Specifies the marginal distribution. Either a named alternative
-or a list containing the distribution functions, quantile functions, and
-standard deviations for each marginal. (See the example.) Defaults to \code{"normal"}, which
-uses standard normal marginals.}
+\item{marginals}{Specifies the marginal distribution. Either a named
+alternative or a list containing the distribution functions, quantile
+functions, and standard deviations for each marginal. (See the example.)
+Defaults to \code{"normal"}, which uses standard normal marginals.}
 
-\item{method}{The method used for integration. One of \code{"direct"} or \code{"substitution"}. Defaults
-to \code{"substitution"}.}
+\item{method}{The method used for integration. One of \code{"direct"} or
+\code{"substitution"}. Defaults to \code{"substitution"}.}
 
-\item{symmetric}{\code{TRUE} if the copula is symmetric.}
+\item{symmetric}{If \code{TRUE}, uses the approximation to the symmetric
+quasi-copula bounds to approximate the identification set when the
+copula is symmetric.}
+
+\item{exact}{If \code{TRUE} and \code{symmetric = TRUE}, calculates the identification
+set for symmetric copulas. This may be extremely slow, and is not
+recommended. Usually yields results virtually equal to \code{symmetric = TRUE}
+and \code{exact = FALSE}.}
+
+\item{max_rep}{Maximal repetitions when looking for an interior point; only
+used when \code{symmetric = TRUE} and \code{exact = TRUE}.}
 }
 \value{
 The endpoints of the identification set.
@@ -35,34 +47,35 @@ identification set is \verb{(-1, 1)}.
 }
 \examples{
 
-   # Make pi matrix from data.
-   data = psychTools::bfi
-   data = data[!is.na(data$A4), ]
-   data = data[!is.na(data$A5), ]
-   pi = table(data$A4, data$A5) / sum(table(data$A4, data$A5))
+# Make pi matrix from data.
+data <- psychTools::bfi
+data <- data[!is.na(data$A4), ]
+data <- data[!is.na(data$A5), ]
+pi <- table(data$A4, data$A5) / sum(table(data$A4, data$A5))
 
-   # Find identification regions for the correlations for some marginals.
-   polyiden::polyiden(pi, marginals = "normal") # [1] -0.2624196  0.7602734
-   polyiden::polyiden(pi, marginals = "laplace") # [1] -0.3542015  0.7878503
-   polyiden::polyiden(pi, marginals = "uniform") # [1] -0.1668584  0.7203827
-   polyiden::polyiden(pi, marginals = "exponential") # [1] -0.2980032  0.8964526
+# Find identification regions for the correlations for some marginals.
+polyiden::polyiden(pi, marginals = "normal") # [1] -0.2624196  0.7602734
+polyiden::polyiden(pi, marginals = "laplace") # [1] -0.3542015  0.7878503
+polyiden::polyiden(pi, marginals = "uniform") # [1] -0.1668584  0.7203827
+polyiden::polyiden(pi, marginals = "exponential") # [1] -0.2980032  0.8964526
 
-   #Assuming symmetry, the identification sets become slightly smaller.
-   polyiden::polyiden(pi, marginals = "normal", symmetric = TRUE) # [1] -0.1327938  0.6988629
+# Assuming symmetry, the identification sets become slightly smaller.
+polyiden::polyiden(pi, marginals = "normal", symmetric = TRUE)
+# [1] -0.1327938  0.6988629
 
-   # Using custom t-distributed marginals with nu = 7 degrees of freedom.
+# Using custom t-distributed marginals with nu = 7 degrees of freedom.
 
-   nu = 7
-   tnu_marginals = list(
-     quant1 = function(p) qt(p, nu),
-     quant2 = function(p) qt(p, nu),
-     dens1 = function(q) dt(q, nu),
-     dens2 = function(q) dt(q, nu),
-     sd1 = sqrt(nu/(nu - 2)),
-     sd2 = sqrt(nu/(nu - 2))
-   )
+nu <- 7
+tnu_marginals <- list(
+  quant1 = function(p) qt(p, nu),
+  quant2 = function(p) qt(p, nu),
+  dens1 = function(q) dt(q, nu),
+  dens2 = function(q) dt(q, nu),
+  sd1 = sqrt(nu / (nu - 2)),
+  sd2 = sqrt(nu / (nu - 2))
+)
 
-   polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
+polyiden::polyiden(pi, marginals = tnu_marginals) # [1] -0.3225405  0.7783182
 }
 \references{
 Grønneberg, S., Moss, J., & Foldnes, N. (2020). Partial Identification of

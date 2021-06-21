@@ -26,7 +26,10 @@ Imports:
     polycor,
     mvtnorm,
     copula,
-    Rfast
+    Rfast,
+    lpSolve,
+    numDeriv,
+    rcdd
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

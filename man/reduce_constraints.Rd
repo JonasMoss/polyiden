@@ -10,10 +10,10 @@ reduce_constraints(constraints)
 \item{constraints}{List of constraints.}
 }
 \value{
-Not sure yet.
+List of reduced constraints.
 }
 \description{
 The inequality constraints in the symmetric matrix problem sometimes has
-an empty interior. In this case \code{constrOptim} will not work, and we have
-to remove redunant variables.
+an empty interior. In this case \code{stats::constrOptim} will not work, and
+we have to remove redunant variables.
 }

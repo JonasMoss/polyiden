@@ -26,20 +26,22 @@ The pi matrix.
 Generate pi matrices.
 }
 \examples{
-   # Make a normal copula with correlation 0.3.
-   norm_cop = copula::normalCopula(0.3, dim = 2)
-   copula = function(u) copula::pCopula(u, norm_cop)
+# Make a normal copula with correlation 0.3.
+norm_cop <- copula::normalCopula(0.3, dim = 2)
+copula <- function(u) copula::pCopula(u, norm_cop)
 
-   # Generate pi matrix for this copula.
-   pi = polyiden::generate_pi(i = 10, j = 4, copula = copula)
-   polycor::polychor(pi) # [1] 0.2999905
+# Generate pi matrix for this copula.
+pi <- polyiden::generate_pi(i = 10, j = 4, copula = copula)
+polycor::polychor(pi) # [1] 0.2999905
 
-   # Using the "beta" argument we can non-uniform cutoffs.
-   pi = polyiden::generate_pi(i = 10, j = 9, cutoffs = "beta",
-                           copula = copula, shape1i = 2, shape2i = 7,
-                           shape1j = 1, shape2j = 1/2)
+# Using the "beta" argument we can non-uniform cutoffs.
+pi <- polyiden::generate_pi(
+  i = 10, j = 9, cutoffs = "beta",
+  copula = copula, shape1i = 2, shape2i = 7,
+  shape1j = 1, shape2j = 1 / 2
+)
 
-   polycor::polychor(pi) # [1] 0.2999905
+polycor::polychor(pi) # [1] 0.2999905
 }
 \references{
 Grønneberg, S., Moss, J., & Foldnes, N. (2020). Partial Identification of

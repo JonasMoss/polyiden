@@ -6,6 +6,12 @@
 \usage{
 symmetry_constraints(pi)
 }
+\arguments{
+\item{pi}{The pi matrix.}
+}
+\value{
+The symmetry constraints.
+}
 \description{
 Generate the constraints
 }

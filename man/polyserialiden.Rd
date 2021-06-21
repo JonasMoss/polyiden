@@ -17,13 +17,13 @@ polyserialiden(
 
 \item{points}{The points where the second argument is evaluated.}
 
-\item{marginals}{Specifies the marginal distribution. Either a named alternative
-or a list containing the distribution functions, quantile functions, and
-standard deviations for each marginal. Defaults to \code{"normal"}, which
-uses standard normal marginals.}
+\item{marginals}{Specifies the marginal distribution. Either a named
+alternative or a list containing the distribution functions, quantile
+functions, and standard deviations for each marginal. Defaults to
+\code{"normal"}, which uses standard normal marginals.}
 
-\item{method}{The method used for integration. One of \verb{direct"} or \verb{"substitution}. Defaults
-to \verb{"substitution}.}
+\item{method}{The method used for integration. One of \verb{direct"} or
+\verb{"substitution}. Defaults to \verb{"substitution}.}
 }
 \value{
 The identification bounds.
